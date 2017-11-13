@@ -37,16 +37,16 @@ from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import Dropout
 
-# Initialising the ANN
+# Initialising the ANN with dropout of p = 0.1
 classifier = Sequential()
 
 # Adding the input layer and the first hidden layer
 classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
-# classifier.add(Dropout(p = 0.1))
+classifier.add(Dropout(p = 0.1))
 
 # Adding the second hidden layer
 classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
-# classifier.add(Dropout(p = 0.1))
+classifier.add(Dropout(p = 0.1))
 
 # Adding the output layer
 classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
@@ -88,12 +88,14 @@ from keras.layers import Dense
 def build_classifier():
     classifier = Sequential()
     classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
+    classifier.add(Dropout(p = 0.1))
     classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
+    classifier.add(Dropout(p = 0.1))
     classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
     classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
     return classifier
 classifier = KerasClassifier(build_fn = build_classifier, batch_size = 10, epochs = 100)
-accuracies = cross_val_score(estimator = classifier, X = X_train, y = y_train, cv = 10, n_jobs = -1)
+accuracies = cross_val_score(estimator = classifier, X = X_train, y = y_train, cv = 10, n_jobs = 1)
 mean = accuracies.mean()
 variance = accuracies.std()
 
@@ -108,9 +110,11 @@ from keras.layers import Dense
 def build_classifier(optimizer):
     classifier = Sequential()
     classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11))
+    classifier.add(Dropout(p = 0.1))
     classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu'))
+    classifier.add(Dropout(p = 0.1))
     classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid'))
-    classifier.compile(optimizer = optimizer, loss = 'binary_crossentropy', metrics = ['accuracy'])
+    classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
     return classifier
 classifier = KerasClassifier(build_fn = build_classifier)
 parameters = {'batch_size': [25, 32],
